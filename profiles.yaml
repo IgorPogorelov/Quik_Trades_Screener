@@ -1,0 +1,1092 @@
+# profiles.yaml
+# Индивидуальные профили по объёму + интервальные переопределения
+
+default:
+  min_volume: 2
+  max_volume: 2000000
+  interval:
+    min: 10.0
+    max: 60.0
+    tolerance_pct: 5.0
+  volume_tolerance_lots: 1
+  ui:
+    show_from_candidate: false
+
+excluded:
+  classes: ["TQTF"]       # весь класс игнорируется
+  symbols: ["LNZL"]  # конкретные тикеры игнорируются
+
+profiles:
+
+  - match: "CETS:CNYRUB_TOM"
+    min_volume: 20
+    max_volume: 100000
+    volume_tolerance_lots: 1
+    interval:
+      min: 5.0
+      max: 60.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:BELU"
+    min_volume: 20
+    max_volume: 100
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:BELU"
+    min_volume: 200
+    max_volume: 5000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:SNGSP"
+    min_volume: 40
+    max_volume: 150
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:SNGSP"
+    min_volume: 151
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:SIBN"
+    min_volume: 30
+    max_volume: 150
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:SIBN"
+    min_volume: 151
+    max_volume: 15000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:PHOR"
+    min_volume: 2
+    max_volume: 15
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:PHOR"
+    min_volume: 10
+    max_volume: 15000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:MSNG"
+    min_volume: 2
+    max_volume: 8
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:MSNG"
+    min_volume: 9
+    max_volume: 8000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:FEES"
+    min_volume: 15
+    max_volume: 60
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:FEES"
+    min_volume: 61
+    max_volume: 100000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:BANE"
+    min_volume: 4
+    max_volume: 10
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:BANE"
+    min_volume: 11
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:OGKB"
+    min_volume: 10
+    max_volume: 60
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:OGKB"
+    min_volume: 61
+    max_volume: 3000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:MTSS"
+    min_volume: 10
+    max_volume: 90
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:MTSS"
+    min_volume: 91
+    max_volume: 100000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:CBOM"
+    min_volume: 10
+    max_volume: 50
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:CBOM"
+    min_volume: 51
+    max_volume: 1000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:UGLD"
+    min_volume: 20
+    max_volume: 100
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:UGLD"
+    min_volume: 300
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:MGNT"
+    min_volume: 5
+    max_volume: 40
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:MGNT"
+    min_volume: 100
+    max_volume: 5000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:GMKN"
+    min_volume: 20
+    max_volume: 150
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:GMKN"
+    min_volume: 200
+    max_volume: 15000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:CHMF"
+    min_volume: 15
+    max_volume: 100
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:CHMF"
+    min_volume: 200
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:NLMK"
+    min_volume: 20
+    max_volume: 100
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:NLMK"
+    min_volume: 200
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:NVTK"
+    min_volume: 10
+    max_volume: 70
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:NVTK"
+    min_volume: 300
+    max_volume: 100000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:IRAO"
+    min_volume: 20
+    max_volume: 100
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:IRAO"
+    min_volume: 200
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:LSRG"
+    min_volume: 10
+    max_volume: 70
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:LSRG"
+    min_volume: 100
+    max_volume: 8000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:FLOT"
+    min_volume: 10
+    max_volume: 100
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      ttolerance_pct: 10.0
+
+  - match: "TQBR:FLOT"
+    min_volume: 200
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      ttolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:ALRS"
+    min_volume: 20
+    max_volume: 150
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:ALRS"
+    min_volume: 200
+    max_volume: 15000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:X5"
+    min_volume: 5
+    max_volume: 30
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:X5"
+    min_volume: 25
+    max_volume: 3000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:PIKK"
+    min_volume: 10
+    max_volume: 100
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:PIKK"
+    min_volume: 200
+    max_volume: 8000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:MAGN"
+    min_volume: 50
+    max_volume: 200
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:MAGN"
+    min_volume: 800
+    max_volume: 25000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:SMLT"
+    min_volume: 10
+    max_volume: 50
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:SMLT"
+    min_volume: 70
+    max_volume: 9000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:T"
+    min_volume: 5
+    max_volume: 30
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:T"
+    min_volume: 300
+    max_volume: 300000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:MTLR"
+    min_volume: 100
+    max_volume: 400
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:MTLR"
+    min_volume: 1000
+    max_volume: 400000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:MOEX"
+    min_volume: 10
+    max_volume: 100
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:MOEX"
+    min_volume: 150
+    max_volume: 60000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:HEAD"
+    min_volume: 5
+    max_volume: 20
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:HEAD"
+    min_volume: 20
+    max_volume: 3000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:UPRO"
+    min_volume: 5
+    max_volume: 20
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:UPRO"
+    min_volume: 20
+    max_volume: 3000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:POSI"
+    min_volume: 10
+    max_volume: 80
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:POSI"
+    min_volume: 200
+    max_volume: 5000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:MDMG"
+    min_volume: 5
+    max_volume: 40
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:MDMG"
+    min_volume: 50
+    max_volume: 4000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:TATN"
+    min_volume: 20
+    max_volume: 100
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:TATN"
+    min_volume: 250
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:TATNP"
+    min_volume: 20
+    max_volume: 100
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:TATNP"
+    min_volume: 200
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:ROSN"
+    min_volume: 20
+    max_volume: 200
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:ROSN"
+    min_volume: 1000
+    max_volume: 100000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:GAZP"
+    min_volume: 40
+    max_volume: 100
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:GAZP"
+    min_volume: 500
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:TRNFP"
+    min_volume: 20
+    max_volume: 100
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:TRNFP"
+    min_volume: 200
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:LKOH"
+    min_volume: 5
+    max_volume: 30
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:LKOH"
+    min_volume: 31
+    max_volume: 3000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:RENI"
+    min_volume: 5
+    max_volume: 50
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:RENI"
+    min_volume: 50
+    max_volume: 5000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:RUAL"
+    min_volume: 50
+    max_volume: 150
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:RUAL"
+    min_volume: 350
+    max_volume: 15000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:BSPB"
+    min_volume: 4
+    max_volume: 10
+    volume_tolerance_lots: 1
+    interval:
+      min: 10.0
+      max: 15.0
+      tolerance_pct: 10.0
+
+  - match: "TQBR:BSPB"
+    min_volume: 20
+    max_volume: 4000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 10.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:AFKS"
+    min_volume: 200
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 5.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:AFLT"
+    min_volume: 200
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 5.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:ASTR"
+    min_volume: 100
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 5.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:CNRU"
+    min_volume: 100
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 5.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:EUTR"
+    min_volume: 500
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 5.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:FESH"
+    min_volume: 100
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 5.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:HYDR"
+    min_volume: 100
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 5.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:IVAT"
+    min_volume: 300
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 5.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:LEAS"
+    min_volume: 50
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 5.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:MVID"
+    min_volume: 150
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 5.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:OZON"
+    min_volume: 200
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 5.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:PLZL"
+    min_volume: 200
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 5.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:RAGR"
+    min_volume: 1000
+    max_volume: 100000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 5.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:RTKM"
+    min_volume: 200
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 5.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:SBER"
+    min_volume: 5000
+    max_volume: 100000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 5.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:SFIN"
+    min_volume: 50
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 5.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:SOFL"
+    min_volume: 100
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 5.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:SPBE"
+    min_volume: 500
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 5.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:SVCB"
+    min_volume: 150
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 5.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:T"
+    min_volume: 300
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 5.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:TRMK"
+    min_volume: 200
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 5.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:VKCO"
+    min_volume: 200
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 5.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:VTBR"
+    min_volume: 5000
+    max_volume: 100000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 5.0
+    ui:
+      show_from_candidate: true
+
+  - match: "TQBR:YDEX"
+    min_volume: 200
+    max_volume: 10000
+    volume_tolerance_lots: 1
+    interval:
+      min: 20.0
+      max: 35.0
+      tolerance_pct: 5.0
+    ui:
+      show_from_candidate: true

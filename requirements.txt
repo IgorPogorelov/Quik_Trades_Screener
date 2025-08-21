@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+pydantic
+starlette
+websockets
+httpx
+jinja2
+python-multipart
+pytz
+quikpy
+pyyaml
+requests

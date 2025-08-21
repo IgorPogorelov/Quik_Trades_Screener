@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>Robots Monitor — Split View</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --fg:#cfcfcf; --muted:#8a8a8a; --row:#1a1a1a; --bg:#121212; --hi:#222222;
+      --line:#2f2f2f; --hover:#262626; --toast:#1e2530; --toast-b:#3a4553;
+      --pos:#22c55e; --neg:#ef4444;
+
+      /* кандидаты — жёлтый цвет */
+      --cand:#f59e0b;                 /* amber-500 */
+      --cand-tint: rgba(245,158,11,.16);
+    }
+
+    /* базовое */
+    html, body { margin:0; padding:0; height:100%; }
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      display:flex; justify-content:flex-end; align-items:flex-start;
+      padding-bottom: 28px;
+    }
+
+    /* статус-бар снизу */
+    .statusbar {
+      position: fixed; left: 0; right: 0; bottom: 0; height: 26px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 10px; background: var(--row); border-top: 1px solid var(--line);
+      color: var(--muted);
+      font: 12px/1.2 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      z-index: 50;
+    }
+    .sb-left, .sb-right { display:flex; align-items:center; gap:10px; }
+    .dot{ width:8px; height:8px; border-radius:50%; background:#888; display:inline-block; margin-right:6px; }
+    .dot.ok{ background: var(--pos); }
+    .dot.err{ background: var(--neg); }
+    .dot.sim{ background: #3b82f6; }
+
+    /* контейнер двух таблиц */
+    .tables { display: grid; grid-template-columns: 1fr 1fr; gap:4px; }
+    .panel { display:flex; flex-direction:column; gap:8px; padding:4px; box-sizing:border-box; }
+    .caption { font-size:12px; color:var(--muted); letter-spacing:.2px; padding:0 2px; margin-bottom:4px; }
+
+    /* таблицы */
+    table { width:100%; border-collapse:collapse; border-radius:12px; overflow:hidden; table-layout:fixed; }
+    thead { display:none; }
+    th, td { padding:6px 8px; border-bottom:1px solid var(--line); text-align:left; }
+    td { font-size:13px; line-height:1.2; }
+
+    tr.group { background:var(--hi); font-weight:600; color:#e0e0e0; cursor:pointer; }
+    tr.group td { padding:8px 10px; font-size:12px; }
+    tr.child { background:var(--row); }
+    tr.child:hover { background:var(--hover); }
+
+    .right { text-align:right; }
+    .mono { font-variant-numeric: tabular-nums; font-family: ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+    /* общий pos/neg оставляем для отдельных элементов (но не вешаем на <tr>) */
+    .pos { color: var(--pos); }
+    .neg { color: var(--neg); }
+    .timer { color: var(--muted); }
+
+    /* объём — единственная ячейка, которая красится по стороне */
+    td.vol { text-align:center; font-weight:700; font-size:16px; line-height:1.1; }
+    td.vol.pos { color: var(--pos); }
+    td.vol.neg { color: var(--neg); }
+
+    /* бейдж: базовые размеры */
+    .badge {
+      display:inline-block; padding:2px 6px; border-radius:8px;
+      font-size:11px; line-height:1; border:1px solid var(--toast-b);
+    }
+
+    /* кандидат: мягкий жёлтый фон и жёлтая левая полоса */
+    tr.child.candidate {
+      background: linear-gradient(0deg, var(--cand-tint), var(--cand-tint)), var(--row);
+    }
+    tr.child.candidate td { font-weight: 600; color: var(--fg); }   /* текст нормального цвета */
+    tr.child.candidate td.vol { font-weight: 800; font-size: 17px; }/* объём всё ещё жирный и окрашен по стороне */
+
+    /* левая полоса */
+    tr.child.candidate td:first-child { position: relative; }
+    tr.child.candidate td:first-child::before {
+      content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background: var(--cand);
+    }
+
+    /* бейдж кандидата — жёлтый */
+    tr.child.candidate .badge {
+      background: var(--cand); color: #111; border-color: transparent; font-weight: 700;
+    }
+
+    /* стрелка */
+    .caret {
+      display:inline-block; width:0; height:0;
+      border-left:6px solid transparent; border-right:6px solid transparent; border-top:7px solid currentColor;
+      margin-right:4px; transform:rotate(-90deg); transition:transform .12s ease;
+    }
+    .expanded .caret { transform:rotate(0deg); }
+
+    .ghosticon { display:inline-flex; align-items:center; justify-content:center; width:16px; height:16px; margin:0 6px; color:var(--muted); opacity:.7; }
+    .ghosticon svg { width:14px; height:14px; }
+
+    /* подсветка новых строк */
+    .blink { animation:blink 10s ease-in-out 1; }
+    @keyframes blink { 0%{background:#2a2a2a} 100%{background:transparent} }
+
+    /* тосты */
+    #toastHost { position:fixed; right:16px; bottom:16px; display:flex; flex-direction:column; gap:10px; z-index:9999; pointer-events:none; }
+    .toast {
+      pointer-events:auto; background:var(--toast); color:var(--fg); border:1px solid var(--toast-b);
+      padding:12px 16px; border-radius:12px; box-shadow:0 6px 16px rgba(0,0,0,.45);
+      font:500 15px/1.5 ui-sans-serif,system-ui; min-width:280px; max-width:360px;
+      opacity:0; transform:translateY(8px); transition:opacity .2s, transform .2s;
+    }
+    .toast.show { opacity:1; transform:translateY(0); }
+
+    @media (max-width: 680px) { .tables { grid-template-columns: 1fr; } }
+
+    /* суммарная ячейка справа в группе */
+    td.sum { text-align: center; font-size: 13px; font-weight: 600; }
+    .sum .sigma { margin-right: 6px; color: var(--muted); }
+    .sum .num { font-weight: 700; }
+    .sum .unit { margin-left: 6px; color: var(--muted); font-size: 12px; letter-spacing: .2px; }
+  </style>
+</head>
+<body>
+
+  <div class="tables">
+    <!-- Левая панель: интервал ≤ 15 сек -->
+    <section class="panel">
+      <div class="caption">Интервал ≤ 15 сек</div>
+      <table id="gridLeft">
+        <colgroup>
+          <col style="width:auto">
+          <col style="width:auto">
+          <col style="width:80px">
+          <col style="width:auto">
+          <col style="width:1px">
+        </colgroup>
+        <thead></thead>
+        <tbody id="rowsLeft"></tbody>
+      </table>
+    </section>
+
+    <!-- Правая панель: интервал > 15 сек -->
+    <section class="panel">
+      <div class="caption">Интервал > 15 сек</div>
+      <table id="gridRight">
+        <colgroup>
+          <col style="width:auto">
+          <col style="width:auto">
+          <col style="width:80px">
+          <col style="width:auto">
+          <col style="width:1px">
+        </colgroup>
+        <thead></thead>
+        <tbody id="rowsRight"></tbody>
+      </table>
+    </section>
+  </div>
+
+  <div id="toastHost"></div>
+
+<script>
+/* ===== Состояние ===== */
+const state = new Map();
+const expanded = new Set();
+let lastBlinkIds = new Set();
+const lastNotifyAt = new Map();
+
+/* антидубликат уведомлений: 5 минут; допуски 10% интервал, ±1 лот объём */
+const NOTIFY_TTL_MS = 5 * 60 * 1000;
+const notifyHistory = [];
+const INTERVAL_TOL_FRACTION = 0.10;
+const VOLUME_TOL_ABS = 1;
+
+function intervalsClose(a, b, tol = INTERVAL_TOL_FRACTION) {
+  const A = Number(a), B = Number(b);
+  if (!Number.isFinite(A) || !Number.isFinite(B) || A <= 0 || B <= 0) return false;
+  const base = Math.max(A, B);
+  return Math.abs(A - B) / base <= tol;
+}
+function volumesClose(a, b, tol = VOLUME_TOL_ABS) {
+  const A = Number(a), B = Number(b);
+  if (!Number.isFinite(A) || !Number.isFinite(B)) return false;
+  return Math.abs(A - B) <= tol;
+}
+function pruneNotifyHistory() {
+  const cutoff = Date.now() - NOTIFY_TTL_MS;
+  for (let i = notifyHistory.length - 1; i >= 0; i--) if (notifyHistory[i].ts < cutoff) notifyHistory.splice(i, 1);
+}
+function wasRecentlyNotified(r) {
+  pruneNotifyHistory();
+  const vol = Number(r.volume_median);
+  const intv = Number(r.interval_sec);
+  return notifyHistory.some(e =>
+    e.symbol === r.symbol &&
+    volumesClose(vol, e.volume, VOLUME_TOL_ABS) &&
+    intervalsClose(intv, e.interval_sec, INTERVAL_TOL_FRACTION)
+  );
+}
+function markNotified(r) {
+  notifyHistory.push({ symbol:r.symbol, interval_sec:Number(r.interval_sec), volume:Number(r.volume_median), ts:Date.now() });
+}
+
+/* ===== Звук ===== */
+const audio = { ctx:null, ready:false, muted:false };
+function ensureAudioUnlocked() {
+  const Ctx = window.AudioContext || window.webkitAudioContext; if (!Ctx || audio.ready) return;
+  audio.ctx = new Ctx(); audio.ready = true;
+}
+async function beepNow() {
+  if (audio.muted) return; ensureAudioUnlocked(); if (!audio.ctx) return;
+  try {
+    if (audio.ctx.state === "suspended") await audio.ctx.resume().catch(()=>{});
+    const ctx = audio.ctx, o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = "square"; o.frequency.value = 1000;
+    g.gain.setValueAtTime(0, ctx.currentTime);
+    g.gain.linearRampToValueAtTime(0.03, ctx.currentTime + 0.005);
+    g.gain.linearRampToValueAtTime(0.0,  ctx.currentTime + 0.12);
+    o.connect(g).connect(ctx.destination);
+    o.start(); o.stop(ctx.currentTime + 0.13);
+    o.onended = () => { try { o.disconnect(); g.disconnect(); } catch {} };
+  } catch {}
+}
+
+/* ===== Тосты ===== */
+function toast(html, ttl=3500) {
+  const host = document.getElementById("toastHost");
+  const el = document.createElement("div"); el.className = "toast"; el.innerHTML = html;
+  host.appendChild(el); requestAnimationFrame(()=> el.classList.add("show"));
+  setTimeout(() => { el.classList.remove("show"); setTimeout(()=> { try { host.removeChild(el); } catch {} }, 220); }, ttl);
+}
+
+/* ===== Форматы ===== */
+function robotKey(ev){
+  const side = (ev.side || "").toUpperCase();
+  const intv = Number(ev.interval_sec ?? 0).toFixed(3);
+  return `${ev.class_code}:${ev.symbol}:${side}:${intv}`;
+}
+
+function fmtIntervalSSmmm(s){ const ms=Math.max(0,Math.round(Number(s)*1000)); const sec=Math.floor(ms/1000), m=ms%1000; return `${sec.toString().padStart(2,'0')}.${m.toString().padStart(3,'0')}`; }
+function fmtTimerSScc(ms){ const m=Math.max(0,Math.round(ms)); const s=Math.floor(m/1000), cc=Math.floor((m%1000)/10); return `${s.toString().padStart(2,'0')}.${cc.toString().padStart(2,'0')}`; }
+function fmtRemainSScc(r){ return r>0 ? fmtTimerSScc(r) : "<b>&mdash;</b>"; }
+function fmtNumber(n){ const s=(Math.round(n*100)/100).toString(); const [a,b]=s.split('.'); return a.replace(/\B(?=(\d{3})+(?!\d))/g,' ') + (b?'.'+b:''); }
+function fmtVol(n, side){
+  const num = Number(n);
+  if (!Number.isFinite(num)) return "";
+  const val = side === "SELL" ? -num : num;
+  return String(val);
+}
+
+/* ===== Нормализация входящих ===== */
+function normalize(evRaw){
+  const ev = evRaw || {};
+  const display_symbol = (ev.symbol ?? ev.ticker ?? ev.sec_code ?? ev.code ?? "").toString();
+  const group_key = display_symbol.trim().toUpperCase();
+  const interval_sec = ev.interval_sec ?? (ev.interval_ms!=null ? Number(ev.interval_ms)/1000 : ev.interval ?? 0);
+  const last_seen_ms = ev.last_seen_ms ?? ev.lastSeenMs ?? (ev.last_seen_at ? Number(ev.last_seen_at)*1000 : Date.now());
+  const expected_next_ms = ev.expected_next_ms ?? ev.expectedNextMs ?? (interval_sec ? last_seen_ms + Number(interval_sec)*1000 : last_seen_ms);
+  const count = ev.count ?? ev.trades ?? ev.trades_count ?? 0;
+  const volume_median = ev.volume_median ?? ev.volumeMedian ?? ev.volume ?? ev.qty ?? 0;
+  const side = String(ev.side || "").toUpperCase();
+  const type = String(evRaw.type || evRaw.event || evRaw.msg_type || "");
+  const is_candidate = (type === "candidate_updated") || !!ev.is_candidate;
+
+  return {
+    class_code: ev.class_code ?? ev.classCode ?? ev.exchange ?? "",
+    symbol: display_symbol,
+    group_key, side,
+    interval_sec:Number(interval_sec)||0,
+    count:Number(count)||0,
+    volume_median:Number(volume_median)||0,
+    last_seen_ms:Number(last_seen_ms)||Date.now(),
+    expected_next_ms:Number(expected_next_ms)||Date.now(),
+    is_candidate
+  };
+}
+
+/* ===== Уведомления о новых ===== */
+function notifyNew(r){
+  if (wasRecentlyNotified(r)) return;
+  const now = Date.now(); const last = lastNotifyAt.get(r.key) || 0;
+  if (now - last < 8000) return;
+  lastNotifyAt.set(r.key, now);
+  toast(`<b>${r.symbol}: новый робот</b><div class="muted">объём ${fmtVol(r.volume_median, r.side)} • интервал ${fmtIntervalSSmmm(r.interval_sec)} • сделок ${r.count}</div>`, 3500);
+  beepNow();
+  markNotified(r);
+}
+
+/* ===== CRUD ===== */
+function upsert(evRaw, opts = {}) {
+  const ev = normalize(evRaw); if (!ev.group_key) return;
+  const key = robotKey(ev);
+  const prev = state.get(key);
+  const obj = { key, ...ev };
+
+  // Если ранее была запись и прилетел робот (не кандидат), снимаем флаг
+  if (prev && !ev.is_candidate) obj.is_candidate = false;
+
+  const isNew = !prev;
+  state.set(key, obj);
+  if (!expanded.has(ev.group_key)) expanded.add(ev.group_key);
+
+  if (isNew && !opts.isBoot) {
+    lastBlinkIds.add(key);
+    if (ev.is_candidate) {
+      toast(`<b>${ev.symbol}: кандидат</b><div class="muted">объём ${fmtVol(ev.volume_median, ev.side)} • интервал ${fmtIntervalSSmmm(ev.interval_sec)} • сделок ${ev.count}</div>`, 2600);
+      beepNow();
+    } else {
+      notifyNew(obj);
+    }
+  }
+
+  try { render(); } catch(e){ console.error(e); }
+}
+
+function setQuikStatus(s){
+  const dot = document.getElementById('quik-dot');
+  const txt = document.getElementById('quik-text');
+  if (!dot || !txt) return;
+
+  const mode = (s.mode || 'unknown').toString().toUpperCase();
+  const connected = !!s.connected;
+
+  dot.classList.remove('ok','err','sim');
+  if (connected) {
+    dot.classList.add(mode === 'SIMULATOR' ? 'sim' : 'ok');
+  } else {
+    dot.classList.add('err');
+  }
+
+  const label = mode === 'SIMULATOR' ? 'SIM' : (mode === 'QUIK' ? 'QUIK' : 'QUIK');
+  txt.textContent = `${label}: ${connected ? 'подключено' : 'нет соединения'}`;
+}
+
+function remove(evRaw) { const ev=normalize(evRaw); state.delete(robotKey(ev)); render(); }
+
+/* ===== Группировка по списку записей ===== */
+function buildGroups(records){
+  const g = new Map();
+  for (const r of records) {
+    if (!g.has(r.group_key)) g.set(r.group_key, { key:r.group_key, display:r.symbol, children:[], trades_sum:0, volume_sum_per_minute:0 });
+    const group = g.get(r.group_key);
+    group.children.push(r);
+    group.trades_sum += r.count;
+    const signedVol = r.side === "SELL" ? -r.volume_median : r.volume_median;
+    const perMin = r.interval_sec > 0 ? (60 / r.interval_sec) * signedVol : 0;
+    group.volume_sum_per_minute += perMin;
+    if (r.symbol && r.symbol.length > group.display.length) group.display = r.symbol;
+  }
+  const groups = Array.from(g.values()).sort((a,b)=> a.key.localeCompare(b.key));
+  for (const gr of groups) {
+    gr.children.sort((a,b)=> a.interval_sec === b.interval_sec ? b.count - a.count : a.interval_sec - b.interval_sec);
+    gr.volume_sum_per_minute = Math.round(gr.volume_sum_per_minute * 100) / 100;
+  }
+  return groups;
+}
+
+/* ===== Рендер одной таблицы ===== */
+function renderInto(tbodyId, records){
+  const tbody = document.getElementById(tbodyId);
+  const groups = buildGroups(records);
+  const now = Date.now();
+  let html = "";
+
+  for (const gr of groups) {
+    const isOpen = expanded.has(gr.key);
+    const grpSignClass = gr.volume_sum_per_minute > 0 ? "pos" : (gr.volume_sum_per_minute < 0 ? "neg" : "");
+
+    /* строка группы */
+    html += `<tr class="group ${isOpen ? 'expanded':''}" data-ticker="${gr.key}" onclick="toggleGroup('${gr.key}')">
+      <td><span class="caret"></span>${gr.display}</td>
+      <td colspan="4" class="mono sum">
+        <span class="sigma">&sum;</span>
+        <span class="num ${grpSignClass}">${fmtNumber(gr.volume_sum_per_minute)}</span>
+        <span class="unit">1m</span>
+      </td>
+    </tr>`;
+
+    if (!isOpen) continue;
+
+    /* дети */
+    for (const r of gr.children) {
+      const interval = fmtIntervalSSmmm(r.interval_sec);
+      const timerHtml = fmtRemainSScc(r.expected_next_ms - now);
+      const blinkClass = lastBlinkIds.has(r.key) ? "blink" : "";
+      const signedVol = r.side === "SELL" ? -Number(r.volume_median) : Number(r.volume_median);
+      const volClass = signedVol > 0 ? "pos" : (signedVol < 0 ? "neg" : "");
+      const candidateClass = r.is_candidate ? "candidate" : "";
+      const badgeHtml = r.is_candidate ? `<span class="badge">канд.</span>` : "";
+
+      html += `<tr class="child ${blinkClass} ${candidateClass}">
+        <td class="mono vol ${volClass}">${fmtVol(r.volume_median, r.side)}</td>
+        <td class="right mono">${interval}</td>
+        <td class="right mono">${r.count}</td>
+        <td class="right mono timer">${timerHtml}</td>
+        <td class="right mono">${badgeHtml}</td>
+      </tr>`;
+    }
+  }
+  tbody.innerHTML = html;
+}
+
+/* ===== Главный рендер ===== */
+function render(){
+  const all = Array.from(state.values());
+  const fast = all.filter(r => Number(r.interval_sec) <= 15);
+  const slow = all.filter(r => Number(r.interval_sec) > 15);
+  renderInto("rowsLeft", fast);
+  renderInto("rowsRight", slow);
+  lastBlinkIds.clear();
+}
+
+/* ===== Разное ===== */
+function toggleGroup(groupKey){ if (expanded.has(groupKey)) expanded.delete(groupKey); else expanded.add(groupKey); render(); }
+
+/* Перерисовка таймеров */
+setInterval(()=>{ try{ render(); }catch(e){ console.error(e); } }, 250);
+
+/* ===== Инициализация ===== */
+async function init(){
+  try {
+    const snap = await fetch("/robots/active").then(r=>r.json());
+    (snap || []).forEach(ev => upsert(ev, { isBoot:true }));
+  } catch(e) { console.error("failed to load /robots/active", e); }
+
+  try {
+    const s = await fetch("/quik/status").then(r=>r.json());
+    setQuikStatus(s);
+  } catch {}
+
+  for (const r of state.values()) expanded.add(r.group_key);
+  const wsProto = (location.protocol === "https:") ? "wss" : "ws";
+  const host = location.host || "127.0.0.1:8100";
+  const ws = new WebSocket(`${wsProto}://${host}/ws`);
+
+  ws.onmessage = (msg) => {
+    let ev; try { ev = JSON.parse(msg.data); } catch { return; }
+    const t = ev.type || ev.event || ev.msg_type || "";
+    const payload = ev.payload || ev.data || ev;
+
+    if (t === "quik_status") { setQuikStatus(payload); return; }
+
+    if (t === "candidate_updated")      upsert(payload);
+    else if (t === "candidate_timeout") remove(payload);
+    else if (t === "robot_detected" || t === "robot_tick") upsert(payload);
+    else if (t === "robot_timeout" || t === "robot_deactivated") remove(payload);
+  };
+
+  ws.onopen  = () => console.log("ws open");
+  ws.onclose = () => {
+    setQuikStatus({connected:false, mode:'quik'});
+    setTimeout(init, 1000);
+  };
+}
+init();
+</script>
+
+<div class="statusbar">
+  <div class="sb-left">
+    <span class="dot" id="quik-dot"></span>
+    <span id="quik-text">QUIK: нет данных</span>
+  </div>
+  <div class="sb-right"></div>
+</div>
+</body>
+</html>
